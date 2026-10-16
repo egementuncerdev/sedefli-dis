@@ -312,7 +312,7 @@ function initAppointment(form) {
     current = i;
     steps.forEach((s, k) => s.classList.toggle('is-active', k === i));
     dots.forEach((d, k) => { d.classList.toggle('is-current', k === i); d.classList.toggle('is-done', k < i); });
-    stepText.textContent = `${fill(msg.stepOf, { i: i + 1, n: steps.length })} · ${steps[i].querySelector('legend').textContent}`;
+    stepText.textContent = fill(msg.stepOf, { i: i + 1, n: steps.length });
     navBar.classList.toggle('has-prev', i > 0);
     navBar.classList.toggle('is-last', i === steps.length - 1);
     if (i === steps.length - 1) fillSummary();
