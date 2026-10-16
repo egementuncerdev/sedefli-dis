@@ -527,8 +527,9 @@ textarea.input { resize: vertical; min-height: 96px; line-height: 1.5; }
   .nav-backdrop { position: fixed; inset: 0; z-index: 55; background: rgba(19, 48, 47, .3); }
 
   .hero__grid, .split, .contact-grid, .faq-block { grid-template-columns: 1fr; }
-  .hero__visual { max-width: 420px; width: 100%; margin-inline: auto; aspect-ratio: 1.25; }
-  .pearl { inset: 4% 16%; }
+  .hero { padding-bottom: 40px; }
+  .hero__visual { max-width: 460px; width: 100%; margin-inline: auto; aspect-ratio: 1; }
+  .pearl { inset: 6% 4% 8%; }
   .chip--a { left: 0; }
   .chip--b { right: 0; }
   .chip--c { left: 6%; }
@@ -564,7 +565,7 @@ textarea.input { resize: vertical; min-height: 96px; line-height: 1.5; }
   .logo__mark { width: 36px; height: 36px; }
   .site-header__inner { gap: 12px; min-height: 66px; }
   .site-header__end { margin-left: auto; gap: 8px; }
-  .hero__visual { aspect-ratio: 1.1; }
+  .hero__visual { aspect-ratio: 1; }
   .chip { font-size: .8rem; padding: 9px 12px; }
   .chip--b { top: 52%; }
   .doc-list .doc-card { flex-direction: column; padding: 26px; }
