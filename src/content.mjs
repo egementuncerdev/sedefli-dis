@@ -28,6 +28,27 @@ export const clinic = {
 };
 
 /* --------------------------------------------------------------------------
+   Fotoğraflar — Unsplash License (ücretsiz, ticari kullanım serbest).
+   Dosyalar: public/img/<ad>-640|1200.avif|webp  (üretici: scripts/photos.mjs)
+   Not: Fotoğraflar kurgusal hekimlerimizin portresi olarak KULLANILMAZ.
+   -------------------------------------------------------------------------- */
+export const photos = {
+  hero: { size: [2000, 1500], by: ['Harold Hisona', 'harold_angus'], alt: { tr: 'Diş hekimi, aydınlık bir muayene odasında hastasıyla konuşuyor', en: 'A dentist talking with a patient in a bright treatment room' } },
+  'clinic-room': { size: [1600, 1070], by: ['Benyamin Bohlouli', 'benyamin_bohlouli'], alt: { tr: 'Modern bir muayene odası: diş ünitesi, dolaplar ve geniş tezgâh', en: 'A modern treatment room with a dental unit, cabinets and a long counter' } },
+  'clinic-chair': { size: [1600, 2400], by: ['Katarzyna Zygnerska', 'katasha'], alt: { tr: 'Pencere önünde beyaz bir diş koltuğu', en: 'A white dental chair by a window' } },
+  'clinic-waiting': { size: [1600, 1872], by: ['Amy Vosters', 'amyvosters'], alt: { tr: 'Sandalyeler ve bitkiyle sade bir bekleme salonu', en: 'A simple waiting room with chairs and a plant' } },
+  hygiene: { size: [1600, 2400], by: ['syahmi syahir', 'subspace_stills'], alt: { tr: 'Mavi eldivenli elde tutulan steril diş aletleri', en: 'Sterile dental instruments held in a blue-gloved hand' } },
+  'xray-monitor': { size: [1600, 1067], by: ['Fr0ggy5', 'fr0ggy5_fr0ggy5'], alt: { tr: 'Klinikte monitörde görüntülenen dijital diş röntgeni', en: 'A digital dental X-ray displayed on a monitor in a clinic' } },
+  implant: { size: [1600, 1067], by: ['Platinum Dental Care', 'platinumdentalcare'], alt: { tr: 'Çene kemiğindeki implant vidası ve kronu gösteren model', en: 'A model showing an implant post and crown in the jawbone' } },
+  aligner: { size: [1600, 1200], by: ['Harold Hisona', 'harold_angus'], alt: { tr: 'Şeffaf plağını dişlerine yerleştiren bir kadın', en: 'A woman fitting a clear aligner onto her teeth' } },
+  canal: { size: [1600, 1067], by: ['Jonathan Borba', 'jonathanborba'], alt: { tr: 'Işıklı panoda diş röntgenlerini inceleyen bir diş hekimi', en: 'A dentist reviewing dental X-rays on a light box' } },
+  whitening: { size: [1600, 2400], by: ['Tony Litvyak', 'justatony'], alt: { tr: 'Beyaz dişlerle gülümseyen bir yüzün yakın çekimi', en: 'Close-up of a smile with white teeth' } },
+  crown: { size: [1600, 1067], by: ['Jonathan Borba', 'jonathanborba'], alt: { tr: 'Kron ve implant modelleri', en: 'Crown and implant models' } },
+  kids: { size: [1600, 1065], by: ['Navy Medicine', 'navymedicine'], alt: { tr: 'Bir çocuğun dişlerini muayene eden diş hekimi', en: 'A dentist examining a child’s teeth' } },
+  approach: { size: [1600, 2400], by: ['Jonathan Borba', 'jonathanborba'], alt: { tr: 'Koruyucu ekipmanla tedavi yapan iki diş hekimi', en: 'Two dentists in protective gear treating a patient' } }
+};
+
+/* --------------------------------------------------------------------------
    Hekimler (kurgusal)
    -------------------------------------------------------------------------- */
 export const doctors = [
@@ -92,6 +113,7 @@ export const doctors = [
 export const treatments = [
   {
     id: 'implant',
+    photo: 'implant',
     icon: 'implant',
     doctor: 'selin',
     slug: { tr: 'implant', en: 'dental-implants' },
@@ -143,6 +165,7 @@ export const treatments = [
   },
   {
     id: 'aligner',
+    photo: 'aligner',
     icon: 'aligner',
     doctor: 'mert',
     slug: { tr: 'seffaf-plak', en: 'clear-aligners' },
@@ -194,6 +217,7 @@ export const treatments = [
   },
   {
     id: 'canal',
+    photo: 'canal',
     icon: 'canal',
     doctor: 'deniz',
     slug: { tr: 'kanal-tedavisi', en: 'root-canal-treatment' },
@@ -245,6 +269,7 @@ export const treatments = [
   },
   {
     id: 'whitening',
+    photo: 'whitening',
     icon: 'whitening',
     doctor: 'deniz',
     slug: { tr: 'dis-beyazlatma', en: 'teeth-whitening' },
@@ -296,6 +321,7 @@ export const treatments = [
   },
   {
     id: 'crown',
+    photo: 'crown',
     icon: 'crown',
     doctor: 'deniz',
     slug: { tr: 'zirkonyum-kaplama', en: 'zirconia-crowns' },
@@ -347,6 +373,7 @@ export const treatments = [
   },
   {
     id: 'kids',
+    photo: 'kids',
     icon: 'kids',
     doctor: 'ece',
     slug: { tr: 'cocuk-dis-hekimligi', en: 'paediatric-dentistry' },
@@ -504,11 +531,13 @@ const tr = {
     title: 'Kliniğimiz',
     lead: 'Sedefli Diş, 4 tedavi odası olan, gün ışığı alan bir poliklinik. Her ziyaretinizde aynı özen ve hijyen standardını hedefliyoruz.',
     sections: [
-      { t: 'Hijyen ve sterilizasyon', d: 'Aletler her hastadan sonra yıkanır, poşetlenir ve otoklavda sterilize edilir. Poşetler hastanın önünde açılır; tek kullanımlık malzemeler bir kez kullanılır.', icon: 'shield' },
-      { t: 'Dijital görüntüleme', d: 'Panoramik ve ağız içi dijital röntgenle görüntüyü aynı anda ekranda birlikte inceliyoruz.', icon: 'scan' },
+      { photo: 'hygiene', t: 'Hijyen ve sterilizasyon', d: 'Aletler her hastadan sonra yıkanır, poşetlenir ve otoklavda sterilize edilir. Poşetler hastanın önünde açılır; tek kullanımlık malzemeler bir kez kullanılır.', icon: 'shield' },
+      { photo: 'xray-monitor', t: 'Dijital görüntüleme', d: 'Panoramik ve ağız içi dijital röntgenle görüntüyü aynı anda ekranda birlikte inceliyoruz.', icon: 'scan' },
       { t: 'Ağız içi tarayıcı', d: 'Pek çok tedavide ölçü maddesi yerine dijital tarama kullanıyoruz; sonucu ekranda üç boyutlu görebilirsiniz.', icon: 'tooth' },
       { t: 'Erişilebilirlik', d: 'Kliniğimiz zemin katta; giriş ve tuvalet tekerlekli sandalye ile kullanılabilir.', icon: 'access' }
-    ]
+    ],
+    galleryTitle: 'Klinikten kareler',
+    gallery: ['clinic-room', 'clinic-chair', 'clinic-waiting']
   },
   guidePage: {
     title: 'Hasta rehberi',
@@ -603,7 +632,8 @@ const tr = {
     contact: 'İletişim',
     legal: 'Sitedeki bilgiler genel bilgilendirme amaçlıdır; tanı ve tedavi için hekiminize başvurun.',
     privacy: 'KVKK',
-    made: 'Tasarım ve geliştirme'
+    made: 'Tasarım ve geliştirme',
+    photos: 'Fotoğraflar'
   }
 };
 
@@ -710,11 +740,13 @@ const en = {
     title: 'The clinic',
     lead: 'Sedefli Diş is a bright clinic with four treatment rooms. We aim for the same care and hygiene standard at every visit.',
     sections: [
-      { t: 'Hygiene and sterilisation', d: 'Instruments are washed, pouched and autoclaved after every patient. Pouches are opened in front of you and single-use items are used only once.', icon: 'shield' },
-      { t: 'Digital imaging', d: 'With panoramic and intraoral digital X-rays, we look at the images together on screen right away.', icon: 'scan' },
+      { photo: 'hygiene', t: 'Hygiene and sterilisation', d: 'Instruments are washed, pouched and autoclaved after every patient. Pouches are opened in front of you and single-use items are used only once.', icon: 'shield' },
+      { photo: 'xray-monitor', t: 'Digital imaging', d: 'With panoramic and intraoral digital X-rays, we look at the images together on screen right away.', icon: 'scan' },
       { t: 'Intraoral scanner', d: 'For many treatments we use a digital scan instead of impression material; you can see the 3D result on screen.', icon: 'tooth' },
       { t: 'Accessibility', d: 'The clinic is on the ground floor; the entrance and toilet are wheelchair accessible.', icon: 'access' }
-    ]
+    ],
+    galleryTitle: 'Around the clinic',
+    gallery: ['clinic-room', 'clinic-chair', 'clinic-waiting']
   },
   guidePage: {
     title: 'Patient guide',
@@ -809,7 +841,8 @@ const en = {
     contact: 'Contact',
     legal: 'The information on this site is general; please consult your dentist for diagnosis and treatment.',
     privacy: 'Privacy',
-    made: 'Design and development'
+    made: 'Design and development',
+    photos: 'Photos'
   }
 };
 

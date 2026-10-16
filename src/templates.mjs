@@ -2,7 +2,7 @@
    Sayfa şablonları — build.mjs her dil ve sayfa için çağırır.
    ========================================================================== */
 
-import { clinic, doctors, treatments, langs } from './content.mjs';
+import { clinic, doctors, treatments, langs, photos } from './content.mjs';
 
 export const esc = (s) => String(s)
   .replace(/&/g, '&amp;')
@@ -52,6 +52,23 @@ const LOGO = `<svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true" foc
         <circle cx="20" cy="20" r="19" fill="url(#pearl)" stroke="currentColor" stroke-opacity=".18"/>
         <path d="${TOOTH}" transform="translate(8.6 8.4) scale(.95)" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
       </svg>`;
+
+/* Fotoğraf: AVIF + WebP, iki genişlik (640 / 1200). sizes: yerleşime göre tarayıcıya ipucu */
+const PHOTO_W = [640, 1200];
+export function pic(t, name, { sizes = '100vw', cls = '', eager = false } = {}) {
+  const ph = photos[name];
+  const set = (ext) => PHOTO_W.map((w) => `/img/${name}-${w}.${ext} ${w}w`).join(', ');
+  const h = Math.round(1200 * ph.size[1] / ph.size[0]);
+  return `<picture class="${cls}">
+          <source type="image/avif" srcset="${set('avif')}" sizes="${sizes}">
+          <img src="/img/${name}-1200.webp" srcset="${set('webp')}" sizes="${sizes}" width="1200" height="${h}" alt="${esc(ph.alt[t.lang])}"${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async">
+        </picture>`;
+}
+const credits = () => {
+  const seen = new Map();
+  Object.values(photos).forEach((p) => seen.set(p.by[1], p.by[0]));
+  return [...seen].map(([u, n]) => `<a href="https://unsplash.com/@${u}?utm_source=sedefli_dis&amp;utm_medium=referral">${esc(n)}</a>`).join(', ');
+};
 
 /* Hekim avatarı: baş harfler, sedef tonunda daire (kurgusal kişiler, fotoğraf yok) */
 const avatar = (d, size = 'md') => `<span class="avatar avatar--${size} avatar--t${d.tone}" aria-hidden="true">${esc(d.initials)}</span>`;
@@ -126,7 +143,8 @@ ${alternates}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="${assets.css}">
+  <link rel="stylesheet" href="${assets.css}">${page.preload ? `
+  <link rel="preload" as="image" type="image/avif" imagesrcset="${['640', '1200'].map((w) => `/img/${page.preload}-${w}.avif ${w}w`).join(', ')}" imagesizes="(max-width: 900px) 92vw, 46vw">` : ''}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
@@ -229,6 +247,7 @@ function footer(t) {
     <div class="wrap site-footer__bottom">
       <p>${esc(t.footer.legal)}</p>
       <p><a href="${t.paths.privacy}">${esc(t.footer.privacy)}</a> · ${esc(t.footer.made)}: <a href="${clinic.author.url}">${esc(clinic.author.name)}</a></p>
+      <p class="credits">${esc(t.footer.photos)}: <a href="https://unsplash.com/?utm_source=sedefli_dis&amp;utm_medium=referral">Unsplash</a> · ${credits()}</p>
     </div>
   </footer>
 
@@ -287,6 +306,7 @@ const ctaBand = (t, title, text, href = t.paths.appointment, label = t.ui.book) 
 const treatmentCard = (t, tr, i, h = 'h3') => `
           <li class="t-card" data-reveal>
             <a href="${treatmentPath(t, tr)}">
+              <span class="t-card__media">${pic(t, tr.photo, { sizes: '(max-width: 640px) 92vw, (max-width: 1080px) 46vw, 380px' })}</span>
               <span class="t-card__icon">${icon(tr.icon)}</span>
               <span class="t-card__num" aria-hidden="true">${pad(i + 1)}</span>
               <${h} class="t-card__title">${esc(tr.name[t.lang])}</${h}>
@@ -332,7 +352,7 @@ const altFor = (key) => Object.fromEntries(langs.map((l) => [l.lang, l.paths[key
    -------------------------------------------------------------------------- */
 export function home(t, assets) {
   const h = t.home;
-  const page = { path: t.paths.home, alt: altFor('home'), title: h.title, desc: t.meta.siteDesc, bodyClass: 'page-home' };
+  const page = { path: t.paths.home, alt: altFor('home'), title: h.title, desc: t.meta.siteDesc, bodyClass: 'page-home', preload: 'hero' };
   const body = `
     <section class="hero">
       <div class="wrap hero__grid">
@@ -346,14 +366,13 @@ export function home(t, assets) {
           </div>
           <ul class="facts">${h.facts.map((f) => `<li><strong>${esc(f.k)}</strong><span>${esc(f.v)}</span></li>`).join('')}</ul>
         </div>
-        <div class="hero__visual" aria-hidden="true">
+        <div class="hero__visual">
           <div class="pearl">
-            <div class="pearl__glow"></div>
-            <svg class="pearl__tooth" viewBox="0 0 24 24"><path d="${TOOTH}"/></svg>
+            ${pic(t, 'hero', { sizes: '(max-width: 900px) 92vw, 46vw', cls: 'pearl__photo', eager: true })}
           </div>
-          <div class="chip chip--a"><span class="chip__dot"></span><span data-open-status-text>${esc(t.contactPage.hours)}</span></div>
-          <div class="chip chip--b">${icon('scan')}<span>${esc(t.clinicPage.sections[1].t)}</span></div>
-          <div class="chip chip--c">${icon('shield')}<span>${esc(t.clinicPage.sections[0].t)}</span></div>
+          <div class="chip chip--a" aria-hidden="true"><span class="chip__dot"></span><span data-open-status-text>${esc(t.contactPage.hours)}</span></div>
+          <div class="chip chip--b" aria-hidden="true">${icon('scan')}<span>${esc(t.clinicPage.sections[1].t)}</span></div>
+          <div class="chip chip--c" aria-hidden="true">${icon('shield')}<span>${esc(t.clinicPage.sections[0].t)}</span></div>
         </div>
       </div>
     </section>
@@ -371,16 +390,21 @@ export function home(t, assets) {
 
     <section class="section section--tint" aria-labelledby="a-title">
       <div class="wrap">
+        <div class="approach">
+          <div class="approach__photo" data-reveal>${pic(t, 'approach', { sizes: '(max-width: 900px) 92vw, 40vw' })}</div>
+          <div>
         <div class="section-head">
           <h2 class="h2" id="a-title">${esc(h.approachTitle)}</h2>
         </div>
-        <ol class="steps steps--4">${h.approach.map((s, i) => `
+        <ol class="steps steps--2">${h.approach.map((s, i) => `
           <li class="step" data-reveal>
             <span class="step__num">${i + 1}</span>
             <h3>${esc(s.t)}</h3>
             <p>${esc(s.d)}</p>
           </li>`).join('')}
         </ol>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -401,6 +425,7 @@ export function home(t, assets) {
     <section class="section section--tint" aria-labelledby="c-title">
       <div class="wrap split">
         <div data-reveal>
+          ${pic(t, 'clinic-room', { sizes: '(max-width: 900px) 92vw, 46vw', cls: 'photo-card' })}
           <h2 class="h2" id="c-title">${esc(h.clinicTitle)}</h2>
           <p class="lead lead--sm">${esc(h.clinicText)}</p>
           <a class="link-arrow" href="${t.paths.clinic}">${esc(h.clinicLink)} ${icon('arrow')}</a>
@@ -478,7 +503,8 @@ export function treatmentPage(t, tr, assets) {
 
   const body = `
     <section class="page-hero page-hero--treatment">
-      <div class="wrap">
+      <div class="wrap treat-hero">
+        <div>
         ${crumbs(t, crumbList)}
         <div class="treat-head">
           <span class="treat-head__icon">${icon(tr.icon)}</span>
@@ -491,6 +517,8 @@ export function treatmentPage(t, tr, assets) {
           <div>${icon('clock')}<dt>${esc(L.duration)}</dt><dd>${esc(tr.duration[t.lang])}</dd></div>
           <div>${icon('calendar')}<dt>${esc(L.visits)}</dt><dd>${esc(tr.visits[t.lang])}</dd></div>
         </dl>
+        </div>
+        ${pic(t, tr.photo, { sizes: '(max-width: 900px) 92vw, 44vw', cls: 'treat-hero__photo', eager: true })}
       </div>
     </section>
 
@@ -583,12 +611,17 @@ export function clinicPage(t, assets) {
     <section class="section section--flush">
       <div class="wrap">
         <ul class="feature-grid">${p.sections.map((s) => `
-          <li class="feature" data-reveal>
+          <li class="feature${s.photo ? ' feature--photo' : ''}" data-reveal>${s.photo ? `
+            ${pic(t, s.photo, { sizes: '(max-width: 640px) 92vw, 46vw', cls: 'feature__photo' })}` : ''}
             <span class="feature__icon">${icon(s.icon)}</span>
             <h2 class="h3">${esc(s.t)}</h2>
             <p>${esc(s.d)}</p>
           </li>`).join('')}
         </ul>
+        <h2 class="h2 gallery-title">${esc(p.galleryTitle)}</h2>
+        <div class="gallery">${p.gallery.map((g, i) => `
+          <figure class="gallery__item gallery__item--${i + 1}" data-reveal>${pic(t, g, { sizes: i ? '(max-width: 640px) 92vw, 30vw' : '(max-width: 640px) 92vw, 60vw' })}</figure>`).join('')}
+        </div>
         <div class="split split--top">
           <div class="hours-card" data-reveal>
             <h2 class="hours-card__title">${icon('clock')}${esc(t.contactPage.hours)}</h2>

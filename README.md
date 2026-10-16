@@ -54,13 +54,15 @@ Kurgusal bir ağız ve diş sağlığı polikliniği için **çok sayfalı, iki 
 - Bütün metinler tek dosyada: `src/content.mjs`. Klinik bilgisi, saatler, hekimler, tedaviler ve iki dilin arayüz metinleri burada.
 - **Cloudflare Workers (static assets)** ile yayın; deploy sırasında build otomatik çalışır.
 - Fontlar: Instrument Serif + Plus Jakarta Sans (Google Fonts).
+- **Fotoğraflar:** [Unsplash](https://unsplash.com) (Unsplash License). Fotoğrafçılar sitenin alt bilgisinde listelenir. Fotoğraflar kurgusal hekimlerin portresi olarak kullanılmaz; hekim kartları baş harflidir. `scripts/photos.mjs` (sharp) kaynak JPG'leri 640/1200 px AVIF + WebP'ye çevirir.
 
 ```
 src/content.mjs     # bütün içerik (TR + EN)
 src/templates.mjs   # sayfa şablonları
 src/style.css       # stiller
 src/app.js          # menü, açık/kapalı durumu, randevu formu
-public/             # favicon, paylaşım görseli
+public/             # favicon, paylaşım görseli, img/ (optimize fotoğraflar)
+scripts/photos.mjs  # fotoğraf dönüştürücü (sharp)
 scripts/images.mjs  # og.png ve apple-touch-icon.png üretici
 build.mjs           # src/ + public/ → dist/
 ```

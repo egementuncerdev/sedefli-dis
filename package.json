@@ -2,9 +2,13 @@
   "name": "sedefli-dis",
   "private": true,
   "type": "module",
-  "description": "Sedefli Diş — kurgusal diş kliniği için çok sayfalı, iki dilli demo site",
+  "description": "Sedefli Di\u015f \u2014 kurgusal di\u015f klini\u011fi i\u00e7in \u00e7ok sayfal\u0131, iki dilli demo site",
   "scripts": {
     "build": "node build.mjs",
-    "dev": "node build.mjs && cd dist && python3 -m http.server 8822"
+    "dev": "node build.mjs && cd dist && python3 -m http.server 8822",
+    "photos": "node scripts/photos.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
   }
 }
